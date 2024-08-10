@@ -3,6 +3,7 @@ package com.stream.app.spring_stream_backend.services.impl;
 import com.stream.app.spring_stream_backend.entities.Video;
 import com.stream.app.spring_stream_backend.services.VideoService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+@Service
 public class VideoServiceImpl implements VideoService {
 
     @Value("${files.video}")
@@ -34,6 +36,7 @@ public class VideoServiceImpl implements VideoService {
             String cleanFileName = StringUtils.cleanPath(filename);
             String cleanFolder = StringUtils.cleanPath(DIR);
             Path path = Paths.get( cleanFolder, cleanFileName);
+            System.out.println(contentType);
             System.out.println(path);
         }catch(IOException e){
             e.printStackTrace();
