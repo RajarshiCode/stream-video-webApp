@@ -4,6 +4,7 @@ package com.stream.app.spring_stream_backend.controllers;
 import com.stream.app.spring_stream_backend.entities.Video;
 import com.stream.app.spring_stream_backend.playload.CustomMessage;
 import com.stream.app.spring_stream_backend.services.VideoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class VideoController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomMessage> create(
+    public ResponseEntity<?> create(
             @RequestParam("file")MultipartFile file,
             @RequestParam("title")String title,
             @RequestParam("description")String description
@@ -36,7 +37,14 @@ public class VideoController {
         video.setTitle(title);
         video.setDescription(description);
         video.setVideoId(UUID.randomUUID().toString());
-        videoService.save(video,file);
-        return null;
+        Video savedVideo = videoService.save(video,file);
+        if(savedVideo != null)
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(video);
+        }else
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CustomMessage.builder()
+                    .message("Video not Uploaded.").success(false).build());
+        }
     }
 }
