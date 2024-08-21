@@ -18,23 +18,60 @@ function VideoUpload() {
     setSelectedFile(event.target.files[0]);
   }
 
-  function handleForm() {
-    console.log("button clicked");
-    console.log(selectedFile);
+  function formFieldChange(event){
+    // console.log(event.target.name);
+    // console.log(event.target.value);
+      setMeta({
+          ... meta,
+          [event.target.name] : event.target.value
+      });
   }
+
+  function handleForm(formEvent) {
+    formEvent.preventDefault();
+
+    if(!selectedFile){
+      alert("Please select file 🎯");
+      return;
+    }
+    
+    saveVideoToServer(selectedFile, meta);
+  }
+
+  //submit file to the server
+  async function saveVideoToServer(video, videoMetaData){
+    setUploading(true);
+    //api call
+
+    try {
+      let response = await axios.post(`https://localhost:8080/api/v1/videos`, formData, {
+        headers : {
+          'Content-Type' : 'multipart/form-data'
+        },
+        onUploadProgress : (progressEvent)=>{
+            console.log(progressEvent);
+        }
+      });
+      console.log(response);
+      setMessage("File Uploaded");
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return <div className="text-white">
 
     <Card className="flex flex-col items-center justify-center">
       <h1>Upload Videos</h1>
       <div>
-        <form className=" flex flex-col space-y-6" onSubmit={handleForm} >
+        <form noValidate className=" flex flex-col space-y-6" onSubmit={handleForm} >
             
           <div>
             <div className="mb-2 block">
               <Label htmlFor="file-upload" value="Video Title" />
             </div>
-            <TextInput placeholder="Enter title..." />
+            <TextInput onChange={formFieldChange} name="title" placeholder="Enter title..." />
           </div>
 
 
@@ -42,16 +79,16 @@ function VideoUpload() {
       <div className="mb-2 block">
         <Label htmlFor="comment" value="Video Description" />
       </div>
-      <Textarea id="comment" placeholder="Write Video description..." required rows={4} />
+      <Textarea onChange={formFieldChange} name="desc" id="comment" placeholder="Write Video description..." required rows={4} />
     </div>
           <div className="flex items-center space-x-5 justify-center">
 
             <div className="shrink-0">
-              <img class="h-16 w-16 object-cover " src={videoLogo} alt="Current profile photo" />
+              <img className="h-16 w-16 object-cover " src={videoLogo} alt="Current profile photo" />
             </div>
             <label className="block">
               <span className="sr-only">Choose profile photo</span>
-              <input onChange={handleFileChange}
+              <input name="file" onChange={handleFileChange}
                 type="file" className="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
@@ -61,9 +98,11 @@ function VideoUpload() {
     "/>
             </label>
           </div>
+          <div className="flex justify-center">
+            <Button type="submit">Submit</Button>
+          </div>
         </form>
-      </div>
-      <div className="flex justify-center"><Button onClick={handleForm}>Upload</Button></div>
+      </div>      
     </Card>
   </div>;
 }
