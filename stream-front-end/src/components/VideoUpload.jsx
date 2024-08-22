@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import videoLogo from "../assets/uploadIcon.png";
 import { Button, Card, Label, TextInput, Textarea } from "flowbite-react";
+import axios from "axios";
 function VideoUpload() {
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -44,7 +45,11 @@ function VideoUpload() {
     //api call
 
     try {
-      let response = await axios.post(`https://localhost:8080/api/v1/videos`, formData, {
+      let formData = new FormData()
+      formData.append("title", videoMetaData.title);
+      formData.append("description", videoMetaData.description);
+      formData.append("file", selectedFile);
+      let response = await axios.post(`http://localhost:8080/api/v1/videos`, formData, {
         headers : {
           'Content-Type' : 'multipart/form-data'
         },
