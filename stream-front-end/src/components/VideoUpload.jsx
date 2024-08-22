@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import videoLogo from "../assets/uploadIcon.png";
-import { Button, Card, Label, TextInput, Textarea } from "flowbite-react";
+import { Alert, Button, Card, Label, Progress, TextInput, Textarea } from "flowbite-react";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 function VideoUpload() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [meta, setMeta] = useState({
-      title : "",
-      description : "",
+    title: "",
+    description: "",
   });
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -19,28 +20,40 @@ function VideoUpload() {
     setSelectedFile(event.target.files[0]);
   }
 
-  function formFieldChange(event){
+  function formFieldChange(event) {
     // console.log(event.target.name);
     // console.log(event.target.value);
-      setMeta({
-          ... meta,
-          [event.target.name] : event.target.value
-      });
+    setMeta({
+      ...meta,
+      [event.target.name]: event.target.value
+    });
   }
 
   function handleForm(formEvent) {
     formEvent.preventDefault();
 
-    if(!selectedFile){
+    if (!selectedFile) {
       alert("Please select file 🎯");
       return;
     }
-    
+
     saveVideoToServer(selectedFile, meta);
   }
 
+
+  function resetForm() {
+    setMeta({
+      title: "",
+      description: "",
+    });
+    setSelectedFile(null);
+    setUploading(false);
+    // setMessage("");
+  }
+
+
   //submit file to the server
-  async function saveVideoToServer(video, videoMetaData){
+  async function saveVideoToServer(video, videoMetaData) {
     setUploading(true);
     //api call
 
@@ -50,17 +63,28 @@ function VideoUpload() {
       formData.append("description", videoMetaData.description);
       formData.append("file", selectedFile);
       let response = await axios.post(`http://localhost:8080/api/v1/videos`, formData, {
-        headers : {
-          'Content-Type' : 'multipart/form-data'
+        headers: {
+          'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress : (progressEvent)=>{
-            console.log(progressEvent);
-        }
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(progress);
+          setProgress((progress));
+        },
       });
       console.log(response);
-      setMessage("File Uploaded");
+      setProgress(0);
+      setMessage("File Uploaded!!");
+      setUploading(false);
+      toast.success("File uploaded successfully !!");
+      resetForm();
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      setMessage("Error in Uplaoding File!!");
+      setUploading(false);
+      toast.error("File not uploaded !!");
     }
   }
 
@@ -71,21 +95,29 @@ function VideoUpload() {
       <h1>Upload Videos</h1>
       <div>
         <form noValidate className=" flex flex-col space-y-6" onSubmit={handleForm} >
-            
+
           <div>
             <div className="mb-2 block">
               <Label htmlFor="file-upload" value="Video Title" />
             </div>
-            <TextInput onChange={formFieldChange} name="title" placeholder="Enter title..." />
+            <TextInput value={meta.title} onChange={formFieldChange} name="title" placeholder="Enter title..." />
           </div>
 
 
           <div className="max-w-md">
-      <div className="mb-2 block">
-        <Label htmlFor="comment" value="Video Description" />
-      </div>
-      <Textarea onChange={formFieldChange} name="desc" id="comment" placeholder="Write Video description..." required rows={4} />
-    </div>
+            <div className="mb-2 block">
+              <Label htmlFor="comment" value="Video Description" />
+            </div>
+            <Textarea
+                value={meta.description}
+                onChange={formFieldChange}
+                name="description"
+                id="comment"
+                placeholder="Write video description..."
+                required
+                rows={4}
+              />
+          </div>
           <div className="flex items-center space-x-5 justify-center">
 
             <div className="shrink-0">
@@ -103,11 +135,40 @@ function VideoUpload() {
     "/>
             </label>
           </div>
+
+          <div className="">
+              {uploading && (
+                <Progress
+                  color="green"
+                  progress={progress}
+                  textLabel="Uploading"
+                  size={"lg"}
+                  labelProgress
+                  labelText
+                />
+              )}
+            </div>
+          <div className="">
+          {message && (
+                <Alert
+                  color={"success"}
+                  rounded
+                  withBorderAccent
+                  onDismiss={() => {
+                    setMessage("");
+                  }}
+                >
+                  <span className="font-medium">Success alert! </span>
+                  {message}
+                </Alert>
+              )}
+          </div>
+
           <div className="flex justify-center">
-            <Button type="submit">Submit</Button>
+            <Button disabled={uploading} type="submit">Submit</Button>
           </div>
         </form>
-      </div>      
+      </div>
     </Card>
   </div>;
 }
