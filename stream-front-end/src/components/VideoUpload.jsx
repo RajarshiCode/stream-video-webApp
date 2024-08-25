@@ -121,7 +121,7 @@ function VideoUpload() {
           <div className="flex items-center space-x-5 justify-center">
 
             <div className="shrink-0">
-              <img className="h-16 w-16 object-cover " src={videoLogo} alt="Current profile photo" />
+              <img className="h-16 w-16 object-cover " src={videoLogo} alt="" />
             </div>
             <label className="block">
               <span className="sr-only">Choose profile photo</span>
