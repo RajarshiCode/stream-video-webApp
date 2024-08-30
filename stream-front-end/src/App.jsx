@@ -6,7 +6,8 @@ import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [count, setCount] = useState(0)
-  const [videoId, setVideoId] = useState("c092e8b9-7c8c-428c-9054-dff6be33207f")
+  
+  const [videoId, setVideoId] = useState("6309574d-43a1-428e-8404-058c9b257fcd")
 
 
 
@@ -15,7 +16,7 @@ function App() {
       <Toaster/>
         <div className="flex flex-col items-center space-y-9 justify-center py-9">
           <h1 className=" text-2xl font-bold text-gray-700 dark:text-gray-100">
-            Streaming WebApp </h1>   
+          StreamVista </h1>   
 
             <div className="flex mt-14 w-full justify-around">
             <div>

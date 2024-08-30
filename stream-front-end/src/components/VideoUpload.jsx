@@ -111,7 +111,7 @@ function VideoUpload() {
             <Textarea
                 value={meta.description}
                 onChange={formFieldChange}
-                name="description"
+                name="description" 
                 id="comment"
                 placeholder="Write video description..."
                 required
