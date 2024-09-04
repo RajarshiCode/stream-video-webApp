@@ -26,8 +26,8 @@ function App() {
               style={{
                 width : 900,                
               }}
-              src={`http://localhost:8080/api/v1/videos/stream/${videoId}`}
-               controls></video>
+              src={`http://localhost:8080/api/v1/videos/stream/range/${videoId}`}
+              autoplay controls ></video>
             </div>
 
             <VideoUpload/>
