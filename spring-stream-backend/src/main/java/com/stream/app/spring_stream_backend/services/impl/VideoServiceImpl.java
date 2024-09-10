@@ -97,7 +97,7 @@ public class VideoServiceImpl implements VideoService {
             processVideo(savedVideo.getVideoId());
 
             //delete actual video file and database entry  if exception
-            
+
             // metadata save
             return savedVideo;
 

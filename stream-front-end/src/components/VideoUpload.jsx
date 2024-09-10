@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import videoLogo from "../assets/uploadIcon.png";
-import { Alert, Button, Card, Label, Progress, TextInput, Textarea } from "flowbite-react";
+import { Alert, Button, Card, Label, Progress, TextInput, Textarea, FileInput } from "flowbite-react";
 import axios from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 function VideoUpload() {
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -76,7 +76,7 @@ function VideoUpload() {
       });
       console.log(response);
       setProgress(0);
-      setMessage("File Uploaded!!");
+      setMessage("File uploaded " + response.data.videoId);
       setUploading(false);
       toast.success("File uploaded successfully !!");
       resetForm();
@@ -163,9 +163,9 @@ function VideoUpload() {
                 </Alert>
               )}
           </div>
-
+                
           <div className="flex justify-center">
-            <Button disabled={uploading} type="submit">Submit</Button>
+            <Button gradientMonochrome="info" disabled={uploading} type="submit">Submit</Button>
           </div>
         </form>
       </div>
