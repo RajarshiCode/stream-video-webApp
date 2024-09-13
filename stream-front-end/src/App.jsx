@@ -8,8 +8,10 @@ import { Button, TextInput } from 'flowbite-react';
 function App() {
   const [count, setCount] = useState(0);
   const [fieldValue, setFieldValue] = useState(null);
-  const [videoId, setVideoId] = useState("27d864ca-1333-42ee-895e-96deef954b94");
+  const [videoId, setVideoId] = useState("46f45878-0088-4c19-a37b-279d84cee23f");
 
+  // className="px-5 py-2"
+  // font-size: 20pt
 
   function playVideo(videoId) {
     setVideoId(videoId);
@@ -19,10 +21,10 @@ function App() {
       <Toaster />
       <div className="flex flex-col items-center space-y-9 justify-center py-9 ">
         <h1 className=" text-2xl font-bold text-gray-700 dark:text-gray-100">
-        <Button outline gradientDuoTone="purpleToBlue" >
+        <Button outline gradientDuoTone="purpleToBlue" >            
         StreamVista
       </Button> </h1>
-
+        
         <div className="flex mt-14 w-full space-x-2 justify-between">
           <div className="w-full">
             <h1 className="text-white text-center mt-2">Playing Video</h1>
